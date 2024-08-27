@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package task_control;
+
+option go_package = "sherniiazov.tms.v1.tmsv1";
+
+
+service TaskControl {
+  rpc Create (CreateRequest) returns (CreateResponse);
+  rpc Processing (ProcessingRequest) returns (ProcessingResponse);
+  rpc AddComment (AddCommentRequest) returns (AddCommentResponse);
+  rpc Delete (DeleteRequest) returns (DeleteResponse);
+}
+
+message CreateRequest {
+  string name = 1;
+  string description = 2;
+  string deadline = 3;
+  string priority = 4;
+}
+
+message CreateResponse {
+  uint64 task_id = 1;
+}
+
+message ProcessingRequest {
+  uint64 task_id = 1;
+  bool stage = 2;
+}
+
+message ProcessingResponse {
+  bool answer = 1;
+}
+
+message AddCommentRequest{
+  uint64 task_id = 1;
+  string comment = 2;
+}
+
+message AddCommentResponse{
+  bool answer = 1;
+}
+
+message DeleteRequest{
+  uint64 task_id = 1;
+}
+
+message DeleteResponse{
+  bool answer = 1;
+}
+
