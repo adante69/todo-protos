@@ -8,6 +8,7 @@ option go_package = "sherniiazov.tms.v1.tmsv1";
 service TaskControl {
   rpc Create (CreateRequest) returns (CreateResponse);
   rpc Processing (ProcessingRequest) returns (ProcessingResponse);
+  rpc Get (GetRequest) returns (GetResponse);
   rpc AddComment (AddCommentRequest) returns (AddCommentResponse);
   rpc Delete (DeleteRequest) returns (DeleteResponse);
 }
@@ -32,6 +33,18 @@ message ProcessingResponse {
   bool answer = 1;
 }
 
+message GetRequest{
+   uint64 task_id = 1;
+}
+
+message GetResponse{
+  string name = 1;
+  string description = 2;
+  string deadline = 3;
+  string priority = 4;
+  string comment = 5;
+}
+
 message AddCommentRequest{
   uint64 task_id = 1;
   string comment = 2;
@@ -48,4 +61,6 @@ message DeleteRequest{
 message DeleteResponse{
   bool answer = 1;
 }
+
+
 

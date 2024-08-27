@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	TaskControl_Create_FullMethodName     = "/task_control.TaskControl/Create"
 	TaskControl_Processing_FullMethodName = "/task_control.TaskControl/Processing"
+	TaskControl_Get_FullMethodName        = "/task_control.TaskControl/Get"
 	TaskControl_AddComment_FullMethodName = "/task_control.TaskControl/AddComment"
 	TaskControl_Delete_FullMethodName     = "/task_control.TaskControl/Delete"
 )
@@ -31,6 +32,7 @@ const (
 type TaskControlClient interface {
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	Processing(ctx context.Context, in *ProcessingRequest, opts ...grpc.CallOption) (*ProcessingResponse, error)
+	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*AddCommentResponse, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 }
@@ -63,6 +65,16 @@ func (c *taskControlClient) Processing(ctx context.Context, in *ProcessingReques
 	return out, nil
 }
 
+func (c *taskControlClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetResponse)
+	err := c.cc.Invoke(ctx, TaskControl_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *taskControlClient) AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*AddCommentResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AddCommentResponse)
@@ -89,6 +101,7 @@ func (c *taskControlClient) Delete(ctx context.Context, in *DeleteRequest, opts 
 type TaskControlServer interface {
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	Processing(context.Context, *ProcessingRequest) (*ProcessingResponse, error)
+	Get(context.Context, *GetRequest) (*GetResponse, error)
 	AddComment(context.Context, *AddCommentRequest) (*AddCommentResponse, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	mustEmbedUnimplementedTaskControlServer()
@@ -106,6 +119,9 @@ func (UnimplementedTaskControlServer) Create(context.Context, *CreateRequest) (*
 }
 func (UnimplementedTaskControlServer) Processing(context.Context, *ProcessingRequest) (*ProcessingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Processing not implemented")
+}
+func (UnimplementedTaskControlServer) Get(context.Context, *GetRequest) (*GetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedTaskControlServer) AddComment(context.Context, *AddCommentRequest) (*AddCommentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddComment not implemented")
@@ -170,6 +186,24 @@ func _TaskControl_Processing_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TaskControl_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskControlServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TaskControl_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskControlServer).Get(ctx, req.(*GetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _TaskControl_AddComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddCommentRequest)
 	if err := dec(in); err != nil {
@@ -220,6 +254,10 @@ var TaskControl_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Processing",
 			Handler:    _TaskControl_Processing_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _TaskControl_Get_Handler,
 		},
 		{
 			MethodName: "AddComment",
