@@ -26,7 +26,6 @@ message CreateResponse {
 
 message ProcessingRequest {
   uint64 task_id = 1;
-  bool stage = 2;
 }
 
 message ProcessingResponse {
@@ -43,6 +42,7 @@ message GetResponse{
   string deadline = 3;
   string priority = 4;
   string comment = 5;
+  bool end_status = 6;
 }
 
 message AddCommentRequest{
