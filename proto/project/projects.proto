@@ -6,11 +6,26 @@ option go_package = "sherniiazov.proj.v1.projv1";
 
 
 service Project {
+  rpc Get (GetRequest) returns (GetResponse);
   rpc Create (CreateRequest) returns (CreateResponse);
   rpc Delete (DeleteRequest) returns (DeleteResponse);
   rpc Update (UpdateRequest) returns (UpdateResponse);
   rpc AddUser (AddUserRequest) returns (AddUserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+  rpc GetUsers (GetUsersRequest) returns (GetUsersResponse);
   rpc AddTask (AddTaskRequest) returns (AddTaskResponse);
+  rpc DeleteTask (DeleteTaskRequest) returns (DeleteTaskResponse);
+  rpc GetTasks (GetTasksRequest) returns (GetTasksResponse);
+}
+
+message GetRequest {
+  uint64 project_id = 1;
+}
+
+message GetResponse {
+  uint64 project_id = 1;
+  string name = 2;
+  string description = 3;
 }
 
 message CreateRequest {
@@ -50,6 +65,23 @@ message AddUserResponse {
   bool check = 1;
 }
 
+message DeleteUserRequest {
+  uint64 project_id = 1;
+  uint64 user_id = 2;
+}
+
+message DeleteUserResponse {
+  bool check = 1;
+}
+
+message GetUsersRequest {
+  uint64 project_id = 1;
+}
+
+message GetUsersResponse {
+  repeated uint64 user_id = 1;
+}
+
 message AddTaskRequest {
   uint64 task_id = 1;
   uint64 project_id =2;
@@ -59,3 +91,19 @@ message AddTaskResponse {
   bool check = 1;
 }
 
+message DeleteTaskRequest {
+  uint64 task_id = 1;
+  uint64 project_id = 2;
+}
+
+message DeleteTaskResponse {
+  bool check = 1;
+}
+
+message GetTasksRequest {
+  uint64 project_id = 1;
+}
+
+message GetTasksResponse {
+  repeated uint64 task_id = 1;
+}
