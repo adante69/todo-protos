@@ -16,6 +16,7 @@ service Project {
   rpc AddTask (AddTaskRequest) returns (AddTaskResponse);
   rpc DeleteTask (DeleteTaskRequest) returns (DeleteTaskResponse);
   rpc GetTasks (GetTasksRequest) returns (GetTasksResponse);
+  rpc GetTask (GetTaskRequest) returns (GetTaskResponse);
 }
 
 message GetRequest {
@@ -106,4 +107,14 @@ message GetTasksRequest {
 
 message GetTasksResponse {
   repeated uint64 task_id = 1;
+}
+
+message GetTaskRequest {
+  uint64 task_id = 1;
+  uint64 project_id = 2;
+}
+
+message GetTaskResponse {
+  uint64 task_id = 1;
+  uint64 project_id = 4;
 }

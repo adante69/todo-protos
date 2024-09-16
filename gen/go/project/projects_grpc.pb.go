@@ -29,6 +29,7 @@ const (
 	Project_AddTask_FullMethodName    = "/proj.Project/AddTask"
 	Project_DeleteTask_FullMethodName = "/proj.Project/DeleteTask"
 	Project_GetTasks_FullMethodName   = "/proj.Project/GetTasks"
+	Project_GetTask_FullMethodName    = "/proj.Project/GetTask"
 )
 
 // ProjectClient is the client API for Project service.
@@ -45,6 +46,7 @@ type ProjectClient interface {
 	AddTask(ctx context.Context, in *AddTaskRequest, opts ...grpc.CallOption) (*AddTaskResponse, error)
 	DeleteTask(ctx context.Context, in *DeleteTaskRequest, opts ...grpc.CallOption) (*DeleteTaskResponse, error)
 	GetTasks(ctx context.Context, in *GetTasksRequest, opts ...grpc.CallOption) (*GetTasksResponse, error)
+	GetTask(ctx context.Context, in *GetTaskRequest, opts ...grpc.CallOption) (*GetTaskResponse, error)
 }
 
 type projectClient struct {
@@ -155,6 +157,16 @@ func (c *projectClient) GetTasks(ctx context.Context, in *GetTasksRequest, opts 
 	return out, nil
 }
 
+func (c *projectClient) GetTask(ctx context.Context, in *GetTaskRequest, opts ...grpc.CallOption) (*GetTaskResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTaskResponse)
+	err := c.cc.Invoke(ctx, Project_GetTask_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProjectServer is the server API for Project service.
 // All implementations must embed UnimplementedProjectServer
 // for forward compatibility.
@@ -169,6 +181,7 @@ type ProjectServer interface {
 	AddTask(context.Context, *AddTaskRequest) (*AddTaskResponse, error)
 	DeleteTask(context.Context, *DeleteTaskRequest) (*DeleteTaskResponse, error)
 	GetTasks(context.Context, *GetTasksRequest) (*GetTasksResponse, error)
+	GetTask(context.Context, *GetTaskRequest) (*GetTaskResponse, error)
 	mustEmbedUnimplementedProjectServer()
 }
 
@@ -208,6 +221,9 @@ func (UnimplementedProjectServer) DeleteTask(context.Context, *DeleteTaskRequest
 }
 func (UnimplementedProjectServer) GetTasks(context.Context, *GetTasksRequest) (*GetTasksResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTasks not implemented")
+}
+func (UnimplementedProjectServer) GetTask(context.Context, *GetTaskRequest) (*GetTaskResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTask not implemented")
 }
 func (UnimplementedProjectServer) mustEmbedUnimplementedProjectServer() {}
 func (UnimplementedProjectServer) testEmbeddedByValue()                 {}
@@ -410,6 +426,24 @@ func _Project_GetTasks_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Project_GetTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTaskRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServer).GetTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Project_GetTask_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServer).GetTask(ctx, req.(*GetTaskRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Project_ServiceDesc is the grpc.ServiceDesc for Project service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -456,6 +490,10 @@ var Project_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTasks",
 			Handler:    _Project_GetTasks_Handler,
+		},
+		{
+			MethodName: "GetTask",
+			Handler:    _Project_GetTask_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
